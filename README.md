@@ -4,7 +4,7 @@ A simple custom Airflow operator definition to trigger jobs in the Cloudera Mach
 ## Summary
 1. [Get a CML API Key](https://github.com/curtishoward/cml_operator/blob/main/README.md#generate-and-test-cml-api-key)
 2. [Configure a CDE Airflow HTTP Connection to the CML API](https://github.com/curtishoward/cml_operator#configure-a-cde-airflow-http-connection-to-cml)
-3. Add the [CMLJobRunOperator code](https://github.com/curtishoward/cml_operator/blob/main/cml_operator_example.py#L7-L59) to the beginning of your CDE Airflow DAG
+3. Add the [CMLJobRunOperator code](https://github.com/curtishoward/cml_operator/blob/main/cml_operator_example.py#L7-L60) to the beginning of your CDE Airflow DAG
 4. Use the operator as follows, to trigger a CML job in DAG:
 ```
 CMLJobRunOperator(task_id=cml_task_id,
