@@ -13,6 +13,7 @@ class CMLJobRunOperator(BaseOperator):
 
     def __init__(
             self,
+            username: str,
             project: str,
             job: str,
             **kwargs) -> None:
@@ -24,7 +25,7 @@ class CMLJobRunOperator(BaseOperator):
         job_label = '({}/{})'.format(self.project, self.job)
 
         get_hook = HttpHook(http_conn_id='cml_rest_api', method='GET')
-        post_hook = HttpHook(http_conn_id='cml_rest_api', method='POST')
+        post_hook = HttpHook(http_conn_id='cml_rest_api_v1', method='POST')
         projects_url = 'api/v2/projects'
         r = get_hook.run(endpoint=projects_url)
         projects = {p['name'] : p['id'] for p in r.json()['projects']} if r.ok else None
@@ -35,7 +36,8 @@ class CMLJobRunOperator(BaseOperator):
             jobs = {j['name'] : j['id'] for j in r.json()['jobs']} if r.ok else None
             
             if jobs and self.job in jobs.keys():
-                runs_url = '{}/{}/runs'.format(jobs_url, jobs[self.job])
+                #runs_url = '{}/{}/runs'.format(jobs_url, jobs[self.job])
+                runs_url = 'api/v2/projects/{}/{}/jobs/{}/start'.format(username, project, jobs[self.job])
                 r = post_hook.run(endpoint=runs_url)
                 run = r.json() if r.ok else None
         
@@ -80,6 +82,7 @@ end = DummyOperator(task_id='end', dag=dag)
 
 cml_job = CMLJobRunOperator(
     task_id='cml_job_task',
+    username='curtis',
     project='curtis-proj',
     job='cml_test_job', 
     dag=dag)
